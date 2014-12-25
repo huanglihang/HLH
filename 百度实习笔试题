@@ -1,0 +1,453 @@
+###建立基本的数据框架
+## 假定：
+## 1.时间以小时为最小单位
+
+
+baidu_guangchang = function(id = 1:2600,date = '08-01'){
+ ID = 1:2600
+ com = c('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O',
+         'P','Q','R','S','T','U','V','W','X','Y','Z')
+ date_f = c('08-01','08-02','08-03','08-04','08-05','08-06','08-07','08-08','08-09','08-10','08-11',
+            '08-12','08-13','08-14','08-15','08-16','08-17','08-18','08-19','08-20','08-21','08-22',
+            '08-23','08-24','08-25','08-26','08-27','08-28','08-29','08-30','08-31')
+ date_s = c(2,3,9,10,16,17,23,24,30,31)
+ d_date = rep(date,each = 2600)
+ com = rep(com,each = 100)
+ com_ID = rep(1:100,26)
+ wh_cm = vector(length = 2600,mode = 'integer') #用户是否出门
+ wh_wed = vector(length = 2600,mode = 'integer') #是否周末
+ cm_time = vector(length = 2600,mode = 'integer') #出门时间
+ bus_time = vector(length =2600,mode ='numeric')  #上888路车时间
+ bus_choose = vector(length = 2600,mode = 'integer') #用户选择哪部乘坐
+
+##百度广场购物数据维度：
+
+ gw_time = vector(length=2600,mode = 'integer')  #购物开始时间
+
+ gw_category_1 = vector(length = 2600,mode = 'integer') #是否消费种类：日用品/快消
+ gw_category_2 = vector(length = 2600,mode = 'integer') #是否消费种类：电子产品
+ gw_category_3 = vector(length = 2600,mode = 'integer') #是否消费种类：服饰
+ gw_category_4 = vector(length = 2600,mode = 'integer') #是否消费种类：书籍
+ gw_category_5 = vector(length = 2600,mode = 'integer') #是否消费种类：奢侈品
+
+ gw_cost_1 = vector(length = 2600,mode = "numeric") #购物种类1消费金额
+ gw_cost_2 = vector(length = 2600,mode = "numeric") #购物种类2消费金额
+ gw_cost_3 = vector(length = 2600,mode = "numeric") #购物种类3消费金额
+ gw_cost_4 = vector(length = 2600,mode = "numeric") #购物种类4消费金额
+ gw_cost_5 = vector(length = 2600,mode = "numeric") #购物种类5消费金额
+
+##百度广场看电影数据维度：
+
+ kdy_time = vector(length = 2600,mode = 'integer')   #看电影开始的时间
+
+ kdy_t1 = vector(length = 2600,mode = 'integer')   #普通票
+ kdy_t2 = vector(length = 2600,mode = 'integer')   #黄金档票
+ kdy_t3 = vector(length = 2600,mode = 'integer')   #IMAX票
+ kdy_t4 = vector(length = 2600,mode = 'integer')   #午夜场票
+
+ kdy_cost1 = vector(length = 2600,mode = 'numeric')  #普通票金额
+ kdy_cost2 = vector(length = 2600,mode = 'numeric')  #黄金档票金额
+ kdy_cost3 = vector(length = 2600,mode = 'numeric')  #IMAX票金额
+ kdy_cost4 = vector(length = 2600,mode = 'numeric')  #午夜场票金额
+
+##百度广场唱歌数据维度：
+
+ cg_time = vector(length = 2600,mode = 'integer')   ##唱歌开始时间
+
+ cg_list1 = vector(length = 2600,mode='integer')    #唱歌黄金时段
+ cg_list2 = vector(length = 2600,mode='integer')    #唱歌下午时段
+ cg_list3 = vector(length = 2600,mode = 'integer')  #唱歌上午时段
+ cg_list4 = vector(length = 2600,mode = 'integer')  #深夜通宵场
+
+ cg_cost1 = vector(length = 2600,mode = 'numeric') #黄金时段消费金额
+ cg_cost2 = vector(length = 2600,mode = 'numeric') #下午时段消费金额
+ cg_cost3 = vector(length = 2600,mode = 'numeric') #上午时段消费金额
+ cg_cost4 = vector(length = 2600,mode = 'numeric') #深夜通宵场消费金额
+
+##百度广场餐厅数据维度：
+
+ cfz_time = vector(length = 2600,mode = 'integer') #早饭就餐时间
+ cfw_time = vector(length = 2600,mode = 'integer') #午饭就餐时间
+ cfd_time = vector(length = 2600,mode = 'integer') #晚餐就餐时间
+
+ cf_list1 = vector(length = 2600,mode = 'integer')  #就餐种类：早餐
+ cf_list2 = vector(length = 2600,mode = 'integer')  #就餐种类：快餐
+ cf_list3 = vector(length = 2600,mode = 'integer')  #就餐种类：中档餐厅
+ cf_list4 = vector(length=2600,mode = 'integer')   #就餐种类：高级餐厅
+
+ cf_cost1 = vector(length = 2600,mode ='numeric')  #早餐消费金额
+ cf_cost2 = vector(length = 2600,mode ='numeric')  #快餐消费金额
+ cf_cost3 = vector(length = 2600,mode ='numeric')  #中档餐厅消费金额
+ cf_cost4 = vector(length = 2600,mode ='numeric')  #高级餐厅消费金额
+
+
+ data = data.frame(ID,com,com_ID,d_date,wh_cm,wh_wed,cm_time,bus_choose,bus_time,gw_time,
+                   gw_category_1,gw_category_2,gw_category_3,gw_category_4,gw_category_5,
+                   gw_cost_1,gw_cost_2,gw_cost_3,gw_cost_4,gw_cost_5,kdy_time,kdy_t1,kdy_t2,
+                   kdy_t3,kdy_t4,kdy_cost1,kdy_cost2,kdy_cost3,kdy_cost4,cg_time,cg_list1,
+                   cg_list2,cg_list3,cg_list4,cg_cost1,cg_cost2,cg_cost3,cg_cost4,cfz_time,
+                   cfw_time,cfd_time,cf_list1,cf_list2,cf_list3,cf_list4,cf_cost1,cf_cost2,
+                   cf_cost3,cf_cost4)
+
+
+
+## 以随机取数原则模拟数据：
+ for (i in id){                             #随机确定用户今天是否出行
+  data[i,'wh_cm'] = sample(c(0,1,1),1)
+ }            #是否出门
+
+ for(i in id){
+   if(data[i,'d_date'] %in% date_f[date_s]){
+     data[i,'wh_wed'] = 1
+   }
+   else{
+     data[i,'wh_wed'] = 0
+   }
+ }              #是否是周末 根据2014年8月日历
+
+ for (i in id){                            #随机确定出行时间
+    if(data[i,'wh_cm']==1){
+      data[i,'cm_time'] = sample(c(0,1,2,3,4,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,
+                                   13,14,14,15,15,16,16,17,17,18,18,19,19,20,20,21,22,23),1)
+    }
+}             #出门时间
+ 
+ for ( i in id){
+    if(data[i,'cm_time'] >= 6 & data[i,'cm_time'] <= 23 & data[i,'wh_cm'] ==1){
+        data[i,'bus_choose'] = sample(c(1:4),1)
+    }
+ }            #出门选择888号路，去百度广场
+
+ for(i in id){
+  if (data[i,'bus_choose'] == 1){
+    data[i,'bus_time'] =  data[i,'cm_time'] +0.5
+  }
+ }              #巴士到达百度广场时间
+
+## 百度广场唱歌的时段选择
+for(i in id){
+  if(data[i,'bus_choose']==1 & data[i,'bus_time'] >= 16 & data[i,'bus_time'] < 22){
+    data[i,'cg_list1'] = sample(c(0,0,0,0,1,2,3,4),1)
+  }
+  if(data[i,'bus_choose'] == 1 & data[i,'bus_time'] >= 11 & data[i,'bus_time'] < 17){
+    data[i,'cg_list2'] = sample(c(0,0,0,0,1,2,3,4),1)
+  }  
+  if(data[i,'bus_choose'] == 1 & data[i,'bus_time'] >= 6 & data[i,'bus_time'] < 12){
+    data[i,'cg_list3'] = sample(c(0,0,0,0,1,2,3,4),1)
+  }
+  if(data[i,'bus_choose'] == 1  & data[i,'bus_time'] >= 22 | data[i,'bus_choose'] == 1 & data[i,'bus_time'] ==0.5){
+    data[i,'cg_list4'] = sample(c(0,0,0,0,1,2,3,4),1)
+  }
+}
+
+##唱歌发生的时间
+for(i in id){
+  if(data[i,'cg_list1'] != 0){
+    n = data[i,'bus_time'] +0.5
+    data[i,'cg_time'] = sample(n:22,1)
+  }
+  if(data[i,'cg_list2'] != 0){
+    n = data[i,'bus_time'] +0.5
+    data[i,'cg_time'] = sample(n:17,1)
+  }
+  if(data[i,'cg_list3'] != 0){
+    n = data[i,'bus_time'] +0.5
+    data[i,'cg_time'] = sample(n:12,1)
+    
+  }
+  if(data[i,'cg_list4'] != 0 & data[i,'bus_time'] >21){
+    n = data[i,'bus_time'] +0.5
+    data[i,'cg_time'] = sample(n:23,1)
+  }
+  if(data[i,'cg_list4'] != 0 & data[i,'bus_time'] == 0.5){
+    n = data[i,'bus_time'] +0.5
+    data[i,'cg_time'] = sample(n:2,1)
+  }
+}
+
+## 百度广场唱歌的金额消费
+
+for(i in id){
+  if(data[i,'cg_list1'] != 0){
+    if(data[i,'wh_wed'] == 0){
+      data[i,'cg_cost1'] = runif(1,min = 50,max = 80) * data[i,'cg_list1']
+      data[i,'cg_cost1'] = round(data[i,'cg_cost1'],digits = 1)
+    }
+    else{
+      data[i,'cg_cost1'] = runif(1,min = 60,max = 96) * data[i,'cg_list1']
+      data[i,'cg_cost1'] = round(data[i,'cg_cost1'],digits = 1)
+    }
+  }
+  if(data[i,'cg_list2'] !=0 ){
+    if(data[i,'wh_wed'] == 0){
+      data[i,'cg_cost2'] = runif(1,min = 30,max = 50) * data[i,'cg_list2']
+      data[i,'cg_cost2'] = round(data[i,'cg_cost2'],digits = 1)
+    }
+    else{
+      data[i,'cg_cost2'] = runif(1,min = 36,max = 60) * data[i,'cg_list2']
+      data[i,'cg_cost2'] = round(data[i,'cg_cost2'],digits = 1)
+    }
+  }
+  if(data[i,'cg_list3'] !=0 ){
+    if(data[i,'wh_wed'] == 0){
+      data[i,'cg_cost3'] = runif(1,min = 20,max = 30) * data[i,'cg_list3']
+      data[i,'cg_cost3'] = round(data[i,'cg_cost3'],digits = 1)
+    }
+    else{
+      data[i,'cg_cost3'] = runif(1,min = 24,max = 36) * data[i,'cg_list3']
+      data[i,'cg_cost3'] = round(data[i,'cg_cost3'],digits = 1)
+    }
+  }
+  if(data[i,'cg_list4'] !=0 ){
+    if(data[i,'wh_wed'] == 0){
+      data[i,'cg_cost4'] = runif(1,min = 15,max = 20) * data[i,'cg_list4']
+      data[i,'cg_cost4'] = round(data[i,'cg_cost4'],digits = 1)
+    }
+    else{
+      data[i,'cg_cost4'] = runif(1,min = 18,max = 24) * data[i,'cg_list4']
+      data[i,'cg_cost4'] = round(data[i,'cg_cost4'],digits = 1)
+    }
+  }
+}
+
+
+##看电影票型选择
+for(i in id){
+  if(data[i,'bus_choose']==1 & data[i,'bus_time'] > 7 | data[i,'bus_choose']==1 & data[i,'bus_time'] < 2 & data[i,'bus_time'] !=0){
+    if(data[i,'bus_time'] > 16 & data[i,'bus_time'] < 22 & data[i,'cg_list1'] == 0){
+      data[i,'kdy_t2'] = sample(c(0,0,1,2),1)
+    }
+    if(data[i,'bus_time'] > 22 & data[i,'cg_list4'] ==0 | data[i,'bus_time'] < 2 & data[i,'bus_time'] !=0 & data[i,'cg_list4'] ==0){
+      data[i,'kdy_t4'] = sample(c(0,0,1,2),1)
+    }
+    if(data[i,'kdy_t2'] == 0 & data[i,'kdy_t4'] == 0 &data[i,'bus_time'] > 6){
+      data[i,'kdy_t1'] = sample(c(0,0,1,2),1)
+      if(data[i,'kdy_t1'] == 0){
+        data[i,'kdy_t3'] = sample(c(0,0,1,2),1)
+      }
+    }
+  }
+}
+
+##看电影的消费金额
+for(i in id){
+  if(data[i,'kdy_t1'] != 0){
+    if(data[i,'wh_wed'] == 0){
+      data[i,'kdy_cost1'] = runif(1,min = 50,max = 100) * data[i,'kdy_t1']
+      data[i,'kdy_cost1'] = round(data[i,'kdy_cost1'],digits = 1)
+    }
+    else{
+      data[i,'kdy_cost1'] = runif(1,min = 60,max = 120) * data[i,'kdy_t1']
+      data[i,'kdy_cost1'] = round(data[i,'kdy_cost1'],digits = 1)
+    }
+  }
+  if(data[i,'kdy_t2'] !=0 ){
+    if(data[i,'wh_wed'] == 0){
+      data[i,'kdy_cost2'] = runif(1,min = 80,max = 150) * data[i,'kdy_t2']
+      data[i,'kdy_cost2'] = round(data[i,'kdy_cost2'],digits = 1)
+    }
+    else{
+      data[i,'kdy_cost2'] = runif(1,min = 96,max = 180) * data[i,'kdy_t2']
+      data[i,'kdy_cost2'] = round(data[i,'kdy_cost2'],digits = 1)
+    }
+  }
+  if(data[i,'kdy_t3'] !=0 ){
+    if(data[i,'wh_wed'] == 0){
+      data[i,'kdy_cost3'] = runif(1,min = 100,max = 180) * data[i,'kdy_t3']
+      data[i,'kdy_cost3'] = round(data[i,'kdy_cost3'],digits = 1)
+    }
+    else{
+      data[i,'kdy_cost3'] = runif(1,min = 120,max = 216) * data[i,'kdy_t3']
+      data[i,'kdy_cost3'] = round(data[i,'kdy_cost3'],digits = 1)
+    }
+  }
+  if(data[i,'kdy_t4'] !=0 ){
+    if(data[i,'wh_wed'] == 0){
+      data[i,'kdy_cost4'] = runif(1,min = 30,max = 70) * data[i,'kdy_t4']
+      data[i,'kdy_cost4'] = round(data[i,'kdy_cost4'],digits = 1)
+    }
+    else{
+      data[i,'kdy_cost4'] = runif(1,min = 36,max = 84) * data[i,'kdy_t4']
+      data[i,'kdy_cost4'] = round(data[i,'kdy_cost4'],digits = 1)
+    }
+  }
+}
+
+##看电影发生的时间
+for(i in id){
+  if(data[i,'kdy_t2'] != 0){
+    n = data[i,'bus_time'] +0.5
+    data[i,'kdy_time'] = sample(n:22,1)
+  }
+  if(data[i,'kdy_t4'] != 0){
+    n =data[i,'bus_time'] +0.5
+    data[i,'kdy_time'] = sample(c(n:24,1,2),1)
+  }
+  if(data[i,'kdy_t1'] !=0){
+    if(data[i,'cg_time'] != 0 ){
+      a = data[i,'cg_time'] + max(data[i,30:33])
+      if(a<= 23){
+        h = data[i,'cg_time']-1
+        a1 = a+1
+        b = data[i,'bus_time'] +0.5
+        v1 = b:h
+        v2 = a1:24
+        data[i,'kdy_time'] = sample(c(v1,v2),1)
+      }
+      if(a >23){
+        h = data[i,'cg_time']-1
+        b = data[i,'bus_time'] +0.5
+        data[i,'kdy_time'] = sample(b:h,1)
+      }  
+    }
+    if(data[i,'cg_time'] == 0){
+      n =data[i,'bus_time'] +0.5
+      data[i,'kdy_time'] = sample(n:23,1)
+    }
+  }
+  if(data[i,'kdy_t3'] !=0){
+    if(data[i,'cg_time'] != 0 ){
+      a = data[i,'cg_time'] + max(data[i,30:33])
+      if(a<= 23){
+        h = data[i,'cg_time']-1
+        a1 = a+1
+        b = data[i,'bus_time'] +0.5
+        v1 = b:h
+        v2 = a1:24
+        data[i,'kdy_time'] = sample(c(v1,v2),1)
+      }
+      if(a>23){
+        h = data[i,'cg_time']-1
+        b = data[i,'bus_time'] +0.5
+        data[i,'kdy_time'] = sample(b:h,1)
+      }  
+    }
+    if(data[i,'cg_time'] == 0 ){
+      n =data[i,'bus_time'] +0.5
+      data[i,'kdy_time'] = sample(n:23,1)
+    }
+  }
+}
+
+## 百度广场购物数据
+
+for(i in id){
+  if(data[i,'bus_choose'] == 1 & data[i,'bus_time'] > 8 & data[i,'bus_time'] < 22){
+    data[i,'gw_category_1'] = sample(c(0,1),1)
+    data[i,'gw_category_2'] = sample(c(0,1),1)
+    data[i,'gw_category_3'] = sample(c(0,1),1)
+    data[i,'gw_category_4'] = sample(c(0,1),1)
+    data[i,'gw_category_5'] = sample(c(0,1),1)
+  }
+} #购物种类
+
+for(i in id){
+  if(data[i,'gw_category_1'] == 1){
+    data[i,'gw_cost_1'] = runif(1,min = 1,max = 300)
+    data[i,'gw_cost_1'] = round(data[i,'gw_cost_1'],digits = 1) 
+  }
+  if(data[i,'gw_category_2'] == 1){
+    data[i,'gw_cost_2'] = runif(1,min = 100,max = 5000)
+    data[i,'gw_cost_2'] = round(data[i,'gw_cost_2'],digits = 1) 
+  }
+  if(data[i,'gw_category_3'] == 1){
+    data[i,'gw_cost_3'] = runif(1,min = 100,max = 3000)
+    data[i,'gw_cost_3'] = round(data[i,'gw_cost_3'],digits = 1) 
+  }
+  if(data[i,'gw_category_4'] == 1){
+    data[i,'gw_cost_4'] = runif(1,min = 10,max = 1000)
+    data[i,'gw_cost_4'] = round(data[i,'gw_cost_4'],digits = 1) 
+  }
+  if(data[i,'gw_category_5'] == 1){
+    data[i,'gw_cost_5'] = runif(1,min = 3000,max = 10000)
+    data[i,'gw_cost_5'] = round(data[i,'gw_cost_5'],digits = 1) 
+  }
+} #消费金额
+
+#购物发生时间
+for(i in id){
+  if(data[i,10] != 0 |data[i,11] != 0|data[i,12] != 0|data[i,13] != 0|data[i,14] != 0){
+    if(data[i,'kdy_time'] >=8 & data[i,'kdy_time'] <=22){
+      gw_h = 8:22
+      a = data[i,'kdy_time'] +2
+      kdy_h = data[i,'kdy_time']:a
+      gw_h1 = setdiff(gw_h,kdy_h)
+      data[i,'gw_time'] = sample(gw_h1,1)
+    }
+    else{
+      data[i,'gw_time'] = sample(8:22,1)
+    }
+  }
+}
+
+##百度广场吃饭行为数据：
+##是否吃了早饭
+for (i in id){
+    if(data[i,'bus_time']<= 10 & data[i,'bus_choose'] == 1){
+      data[i,'cf_list1'] = sample(c(0,1),1)
+    }
+}
+
+##午餐与晚餐
+for(i in id){
+    if (data[i,'bus_time'] <= 23 & data[i,'bus_choose'] == 1){
+      data[i,'cf_list2'] = sample(c(0,0,1,2),1)
+      if(data[i,'cf_list2'] == 0){
+        data[i,'cf_list3'] =sample(c(0,0,1,2),1)
+        if(data[i,'cf_list3'] == 0){
+          data[i,'cf_list4'] = sample(c(0,0,1,2),1)
+        }
+        if(data[i,'cf_list3'] == 1){
+          data[i,'cf_list4'] = sample(c(0,1),1)
+        }
+      }
+      if(data[i,'cf_list2'] == 1){
+        data[i,'cf_list3'] = sample(c(0,1),1)
+        if(data[i,'cf_list3'] == 0){
+          data[i,'cf_list4'] = sample(c(0,1),1)
+        }
+      } 
+    }
+}  
+
+##百度广场吃饭的消费金额
+for(i in id){
+  if(data[i,'cf_list1'] != 0){
+    data[i,'cf_cost1'] = runif(1,min = 5,max = 20) * data[i,'cf_list1']
+    data[i,'cf_cost1'] = round(data[i,'cf_cost1'],digits = 1)
+  }
+  if(data[i,'cf_list2'] !=0 ){
+    data[i,'cf_cost2'] = runif(1,min = 30,max = 50) * data[i,'cf_list2']
+    data[i,'cf_cost2'] = round(data[i,'cf_cost2'],digits = 1)
+  }
+  if(data[i,'cf_list3'] !=0 ){
+    data[i,'cf_cost3'] = runif(1,min = 50,max = 100) * data[i,'cf_list3']
+    data[i,'cf_cost3'] = round(data[i,'cf_cost3'],digits = 1)
+  }
+  if(data[i,'cf_list4'] !=0 ){
+    data[i,'cf_cost4'] = runif(1,min = 100,max = 500) * data[i,'cf_list4']
+    data[i,'cf_cost4'] = round(data[i,'cf_cost4'],digits = 1)
+  }
+}
+
+##吃饭发生的时间
+for(i in id){
+  if(data[i,'cf_list1'] != 0){
+    data[i,'cfz_time'] = sample(7:10,1)
+  }
+  if(max(data[i,42:44]) == 1){
+    data[i,'cfw_time'] =sample(c(0,0,0,11,12,13),1)
+    if(data[i,'cfw_time'] == 0){
+      data[i,'cfd_time'] = sample(c(17,18,19,20,21),1)
+    }
+  }
+  if(max(data[i,42:44]) == 2){
+    data[i,'cfw_time'] =sample(c(11,12,13),1)
+    data[i,'cfd_time'] = sample(c(17,18,19,20,21),1)
+  }
+}
+
+ format = '.csv'
+ write.csv(data,file = paste(date,format,sep=''),col.names = T)
+}
+
